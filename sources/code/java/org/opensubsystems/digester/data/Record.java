@@ -19,6 +19,8 @@
 
 package org.opensubsystems.digester.data;
 
+import java.util.Set;
+import org.opensubsystems.core.error.OSSDataNotFoundException;
 import org.opensubsystems.core.error.OSSException;
 
 /**
@@ -30,6 +32,11 @@ import org.opensubsystems.core.error.OSSException;
  */
 public interface Record<T>
 {
+   public static enum Presence
+   {
+      REQUIRED, OPTIONAL;
+   }
+   
    /**
     * Get sequential number for this record as read by the reader. The record
     * number can be used for example by mappers, for which the position of the 
@@ -46,4 +53,67 @@ public interface Record<T>
     * @return T
     */
    T getRecordData();
+   
+   /**
+    * Extract String value between two delimiters.
+    * 
+    * @param strStart - first delimiter
+    * @param strEnd - second delimiter
+    * @param presence - is the value required or optional
+    * @return String - value between the two delimiters. If the first delimiter
+    *                  doesn't exist, and the value is required then an exception
+    *                  will be thrown
+    * @throws OSSDataNotFoundException - required data were not found
+    */
+   String extractBetweenAsString(
+      String   strStart,
+      String   strEnd,
+      Presence presence
+   ) throws OSSDataNotFoundException;
+
+   /**
+    * Extract Record value between two delimiters.
+    * 
+    * @param strStart - first delimiter
+    * @param strEnd - second delimiter
+    * @param presence - is the value required or optional
+    * @return Record - value between the two delimiters. If the first delimiter
+    *                  doesn't exist, and the value is required then an exception
+    *                  will be thrown
+    * @throws OSSDataNotFoundException - required data were not found
+    */
+   Record extractBetweenAsRecord(
+      String   strStart,
+      String   strEnd,
+      Presence presence
+   ) throws OSSDataNotFoundException;
+
+   /**
+    * Extract Record value between two delimiters.
+    * 
+    * @param strDelimiter - first delimiter
+    * @param presence - is the value required or optional
+    * @return String - value up to the specified delimiter. If the record starts
+    *                  with the delimiter, then the returned value will be empty.
+    * @throws OSSDataNotFoundException - required data were not found
+    */
+   String extractSeparatedAsString(
+      String   strDelimiter,
+      Presence presence
+   ) throws OSSDataNotFoundException;
+
+   /**
+    * Extract Record value between two delimiters.
+    * 
+    * @param strDelimiter - first delimiter
+    * @param presence - is the value required or optional
+    * @return Set<String> - set of value separated by the specified delimiter. 
+    *                       If the record starts with the delimiter, then an 
+    *                       empty value will be included in the set.
+    * @throws OSSDataNotFoundException - required data were not found
+    */
+   Set<String> extractSeparatedAsStringSet(
+      String   strDelimiter,
+      Presence presence
+   ) throws OSSDataNotFoundException;
 }
