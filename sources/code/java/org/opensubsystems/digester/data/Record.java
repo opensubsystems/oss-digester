@@ -19,9 +19,9 @@
 
 package org.opensubsystems.digester.data;
 
-import java.util.Set;
 import org.opensubsystems.core.error.OSSDataNotFoundException;
 import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.util.TwoElementStruct;
 
 /**
  * Interface representing record read by a reader. The record can represent data
@@ -52,5 +52,51 @@ public interface Record<T>
     * 
     * @return T
     */
-   T getRecordData();
+   T getData();
+   
+   /**
+    * Get the record data as string.
+    * 
+    * @return String - the record data represented as string.
+    */
+   String getDataAsString();
+   
+   /**
+    * Get the record data as string after removing the specified postfix.
+    * 
+    * @param strPostfix - the postfix to remove from the data before it is 
+    *                     returned as String
+    * @param presence - if the presence is required, then the record must contain
+    *                   the postfix
+    * @return String - the record data represented as string.
+    * @throws OSSDataNotFoundException - the postfix has not been found in the
+    *                                    record and its presence was required
+    */
+   String getDataAsStringWithoutPostfix(
+      String   strPostfix,
+      Presence presence
+   ) throws OSSDataNotFoundException;
+   
+   /**
+    * Split the record into two subrecords based on the first occurrence of the 
+    * separator.
+    * 
+    * @param strSeparator - separator the first occurrence of which should be 
+    *                       used to split the record into two subrecords
+    * @param presence - if the presence is required, then the record must contain
+    *                   the separator
+    * @return TwoElementStruct<Record<T>, Record<T>> - the first element is the
+    *                                                  portion of the original  
+    *                                                  record before the first 
+    *                                                  occurrence of the separator
+    *                                                  and the second element 
+    *                                                  is the rest of the record
+    *                                                  after the separator
+    * @throws OSSDataNotFoundException - the separator has not been found in the
+    *                                    record and its presence was required
+    */
+   TwoElementStruct<Record<T>, Record<T>> split(
+      String   strSeparator,
+      Presence presence
+   ) throws OSSDataNotFoundException;
 }
