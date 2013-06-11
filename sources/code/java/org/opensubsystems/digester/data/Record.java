@@ -19,6 +19,7 @@
 
 package org.opensubsystems.digester.data;
 
+import java.util.Map;
 import org.opensubsystems.core.error.OSSDataNotFoundException;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.TwoElementStruct;
@@ -98,5 +99,27 @@ public interface Record<T>
    TwoElementStruct<Record<T>, Record<T>> split(
       String   strSeparator,
       Presence presence
+   ) throws OSSDataNotFoundException;
+
+   /**
+    * Split the record into multiple subrecords based on list of separators.
+    * The result 
+    * 
+    * @param arSeparators - list of separator which should be used to split the 
+    *                       record into multiple subrecords
+    * @param presence - if the presence is required, then the record must contain
+    *                   all of the separators
+    * @return Map<String, Record<T>> - The key is the separator and the value is
+    *                                  the record which follows the separator 
+    *                                  until either some other separator
+    *                                  or end of the record. If the same separator
+    *                                  occurs multiple times, they have to follow
+    *                                  each other and they will be contained in
+    *                                  the same record. The element of the record
+    *                                  which is not preceeded by any separator
+    *                                  will be stored using "".
+    */
+   Map<String, Record<T>> split(
+      String[] arSeparators
    ) throws OSSDataNotFoundException;
 }
