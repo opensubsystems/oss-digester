@@ -79,10 +79,20 @@ public interface Record<T>
    ) throws OSSDataNotFoundException;
    
    /**
+    * Test if the record contains specified value.
+    * 
+    * @param strValue - value to search for in the record
+    * @boolean - true if the value is present in the record, false otherwise
+    */
+   boolean contains(
+      String strValue
+   );
+
+   /**
     * Split the record into two subrecords based on the first occurrence of the 
     * separator.
     * 
-    * @param strSeparator - separator the first occurrence of which should be 
+    * @param strSeparator - separator, the first occurrence of which should be 
     *                       used to split the record into two subrecords
     * @param presence - if the presence is required, then the record must contain
     *                   the separator
