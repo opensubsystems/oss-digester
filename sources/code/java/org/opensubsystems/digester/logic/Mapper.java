@@ -33,7 +33,7 @@ public interface Mapper<C extends DigesterContext, R extends Record>
   /**
    * Create the data object from the record read by the reader.
    * 
-   * @param context - context within which is the content being read
+   * @param context - context within which the record is processed
    * @param record - record for which the data object is being created
    * @return Object - data object created from the supplied record or null if no 
    *                  data object should be created for this record and this record 

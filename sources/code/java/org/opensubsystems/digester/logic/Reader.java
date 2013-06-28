@@ -47,7 +47,7 @@ public interface Reader<S, C extends DigesterContext, R extends Record> extends 
    /**
     * Read record from the source initialized during the open call.
     *
-    * @param context - context within which the content is read
+    * @param context - context within which the content is processed
     * @return R - record read by the reader or null if there are no more data to
     *             read.
     * @throws OSSException - an error has occurred 

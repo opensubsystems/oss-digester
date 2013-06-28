@@ -25,8 +25,7 @@ import org.opensubsystems.digester.data.Record;
 import org.opensubsystems.digester.data.DigesterContext;
 
 /**
- * Interface representing parser that is capable of parsing unstructured data
- * to structured data.
+ * Parser capable of parsing unstructured data to structured data.
  * 
  * @author bastafidli
  */
@@ -35,12 +34,13 @@ public interface Parser<C extends DigesterContext, R extends Record>
    /**
     * Parse the record into map of attributes and values.
     * 
+    * @param context - context within which the record is processed
     * @param record - record to parse
     * @return Map<String, Object> - record parsed into attributes and values
     * @throws OSSException - an error has occurred
     */
-   // TODO: Improve: Should C be an argument?
    Map<String, Object> parse(
-     R record
+      C context,
+      R record
    ) throws OSSException;
 }
