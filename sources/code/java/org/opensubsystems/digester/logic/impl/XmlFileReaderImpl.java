@@ -33,6 +33,7 @@ import org.opensubsystems.core.error.OSSMultiException;
 import org.opensubsystems.core.logic.impl.StatelessControllerImpl;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.digester.data.Record;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,8 +41,8 @@ import org.xml.sax.SAXException;
  *
  * @author bastafidli
  */
-public class XmlFileReaderImpl<C extends DigesterContext, R> extends StatelessControllerImpl
-                                                             implements Reader<File, C, R>
+public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> extends StatelessControllerImpl
+                                                                            implements Reader<File, C, R>
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
