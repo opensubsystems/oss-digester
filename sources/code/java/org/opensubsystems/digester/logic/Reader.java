@@ -22,6 +22,7 @@ package org.opensubsystems.digester.logic;
 import org.opensubsystems.digester.data.DigesterContext;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.logic.StatelessController;
+import org.opensubsystems.digester.data.Record;
 
 /**
  * Reader capable of reading content from a source and making it available in the 
@@ -29,7 +30,7 @@ import org.opensubsystems.core.logic.StatelessController;
  *
  * @author bastafidli
  */
-public interface Reader<S, C extends DigesterContext, R> extends StatelessController
+public interface Reader<S, C extends DigesterContext, R extends Record> extends StatelessController
 {
    /**
     * Open the source for reading.
