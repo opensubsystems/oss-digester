@@ -24,8 +24,8 @@ import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.logic.StatelessController;
 
 /**
- * Interface representing reader capable of reading content from a source and 
- * making it available in the form of records.
+ * Reader capable of reading content from a source and making it available in the 
+ * form of records.
  *
  * @author bastafidli
  */
