@@ -24,23 +24,21 @@ import org.opensubsystems.digester.data.DigesterContext;
 import org.opensubsystems.core.error.OSSException;
 
 /**
- * Interface representing mapper that is capable of transforming content supplied
- * by reader to data objects.  
+ * Mapper responsible for transforming content supplied by reader to data objects.  
  * 
- * @author mhalas
+ * @author bastafidli
  */
 public interface Mapper<C extends DigesterContext, R extends Record> 
 {
   /**
    * Create the data object from the record read by the reader.
    * 
-   * @param context - context within which is the content being read.
+   * @param context - context within which is the content being read
    * @param record - record for which the data object is being created
    * @return Object - data object created from the supplied record or null if no 
    *                  data object should be created for this record and this record 
-   *                  should be skipped. Record can be skipped for example
-   *                  when they are cached in the context and will be processed 
-   *                  later)
+   *                  should be skipped. Record can be skipped for example when 
+   *                  it is cached in the context and will be processed later.
    * @throws OSSException - an error has occurred
    */
   Object createObject(
@@ -49,7 +47,7 @@ public interface Mapper<C extends DigesterContext, R extends Record>
   ) throws OSSException;
 
 //  /**
-//   * Process record, which were requested to be skipped. Since the skipped record
+//   * Process record, which was requested to be skipped. Since the skipped record
 //   * doesn't have to follow the format for the file (e.g. it was requested to be 
 //   * skipped because of incorrect format), the whole record is passed as 
 //   * parameter without being parsed.
@@ -57,7 +55,7 @@ public interface Mapper<C extends DigesterContext, R extends Record>
 //   * @param record - record which was skipped
 //   */
 //  void processSkippedRecord(
-//    Object record
+//    R record
 //  );
 //
 //  /**
@@ -84,7 +82,7 @@ public interface Mapper<C extends DigesterContext, R extends Record>
 //   *                   false otherwise
 //   */
 //  boolean isRelatedRecord(
-//    Object previousRecord, 
-//    Object currentRecord
+//    R previousRecord, 
+//    R currentRecord
 //  );
 }
