@@ -19,6 +19,7 @@
 
 package org.opensubsystems.digester.data;
 
+import java.util.List;
 import java.util.Map;
 import org.opensubsystems.core.error.OSSDataNotFoundException;
 import org.opensubsystems.core.error.OSSException;
@@ -38,22 +39,22 @@ public interface Record<T>
       REQUIRED, OPTIONAL;
    }
    
-   /**
-    * Get sequential number for this record as read by the reader. The record
-    * number can be used for example by mappers, for which the position of the 
-    * record determines its type (e.g., first, odd vs event, etc.)
-    *
-    * @return long - sequential number for this record as read by the reader
-    * @throws OSSException - an error has occurred 
-    */
-   long getRecordNumber();
-   
-   /**
-    * Get data representing this record as read by the reader.
-    * 
-    * @return T
-    */
-   T getData();
+//   /**
+//    * Get sequential number for this record as read by the reader. The record
+//    * number can be used for example by mappers, for which the position of the 
+//    * record determines its type (e.g., first, odd vs event, etc.)
+//    *
+//    * @return long - sequential number for this record as read by the reader
+//    * @throws OSSException - an error has occurred 
+//    */
+//   long getRecordNumber();
+//   
+//   /**
+//    * Get data representing this record as read by the reader.
+//    * 
+//    * @return T
+//    */
+//   T getData();
    
    /**
     * Get the record data as string.
@@ -62,6 +63,20 @@ public interface Record<T>
     */
    String getDataAsString();
    
+   /**
+    * Get the record data as a list of strings by separating it using the specified 
+    * separator.
+    * 
+    * @param strSeparator - separator separating the values
+    * @param lstParsed - list of values where to parse the specified portion of 
+    *                    the record
+    * @throws OSSException - an error has occurred
+    */
+   void getDataAsList(
+     String       strSeparator,
+     List<String> lstParsed
+   ) throws OSSException;
+
    /**
     * Get the record data as string after removing the specified postfix.
     * 
