@@ -34,7 +34,7 @@ public interface Reader<S, C extends DigesterContext, R> extends StatelessContro
    /**
     * Open the source for reading.
     * 
-    * @param context - context within which is the content being read.
+    * @param context - context within which the content will be read
     * @param source - source from this the reader should read data
     * @throws OSSException - an error has occurred 
     */
@@ -46,7 +46,7 @@ public interface Reader<S, C extends DigesterContext, R> extends StatelessContro
    /**
     * Read record from the source initialized during the open call.
     *
-    * @param context - context within which is the content being read.
+    * @param context - context within which the content is read
     * @return R - record read by the reader or null if there are no more data to
     *             read.
     * @throws OSSException - an error has occurred 
@@ -56,10 +56,11 @@ public interface Reader<S, C extends DigesterContext, R> extends StatelessContro
    ) throws OSSException;
 
    /**
-    * Close the context for reading and cleanup any resources allocated in open.
-    * This operation must be called once open is called and succeeded.
+    * Close the previously opened context and cleanup any resources allocated 
+    * during its use. This operation must be called once open was called and 
+    * succeeded.
     * 
-    * @param context - context returned from open
+    * @param context - context initialized during open
     */
    void close(
       C context
