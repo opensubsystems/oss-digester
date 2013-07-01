@@ -23,11 +23,15 @@ import java.util.HashMap;
 import java.util.Map;
 import org.opensubsystems.digester.data.DigesterContext;
 import java.util.logging.Logger;
+import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.logic.impl.StatelessControllerImpl;
+import org.opensubsystems.core.util.ClassFactory;
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.ThreeElementStruct;
+import org.opensubsystems.core.util.TwoElementStruct;
 import org.opensubsystems.digester.data.Record;
 import org.opensubsystems.digester.logic.Mapper;
+import org.opensubsystems.digester.logic.Parser;
 
 /**
  * Implementation of the mapper interface for the data in plain text format 
@@ -35,8 +39,11 @@ import org.opensubsystems.digester.logic.Mapper;
  *
  * @author bastafidli
  */
-public abstract class TxtMapperImpl<C extends DigesterContext, R extends Record> extends StatelessControllerImpl
-                                                                                 implements Mapper<C, R>
+public abstract class TxtMapperImpl<C extends DigesterContext, 
+                                    R extends Record,
+                                    O> 
+                                   extends StatelessControllerImpl
+                                   implements Mapper<C, R, O>
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -44,7 +51,7 @@ public abstract class TxtMapperImpl<C extends DigesterContext, R extends Record>
     * Map containing patterns that the mapper uses to map data in the plain text
     * format to POJO objects.
     */
-   Map<String, ThreeElementStruct<String, String, Class>> m_mpPatters;
+   protected Map<String, ThreeElementStruct<String, String, Parser>> m_mpPatters;
    
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -65,6 +72,45 @@ public abstract class TxtMapperImpl<C extends DigesterContext, R extends Record>
    
    // Logic ////////////////////////////////////////////////////////////////////
  
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public TwoElementStruct<O, Record> create(
+      C context,
+      R record
+   ) throws OSSException
+   {
+      O                                          result = null;
+      R                                          leftover = record;
+      R                                          element;
+      ThreeElementStruct<String, String, Parser> value;
+      String                                     strPrefix;
+      String                                     strDelimiter;
+      Parser                                     parser;
+      TwoElementStruct<R, R>                     split;
+      
+      for (Map.Entry<String, ThreeElementStruct<String, String, Parser>> entry 
+           : m_mpPatters.entrySet())
+      {
+         value = entry.getValue();
+         strPrefix = value.getFirst();
+         strDelimiter = value.getSecond();
+         parser = value.getThird();
+         
+         if (record.startsWith(strPrefix))
+         {
+            split = record.split(strDelimiter, Record.Presence.REQUIRED);
+            element = split.getFirst();
+            leftover = split.getSecond();
+            result = (O)parser.parse(context, element);
+            break;
+         }
+      }
+      
+      return new TwoElementStruct<O, Record>(result, leftover);
+   }
+   
    // Helper methods ///////////////////////////////////////////////////////////
 
    /**
@@ -75,17 +121,22 @@ public abstract class TxtMapperImpl<C extends DigesterContext, R extends Record>
     * @param strDelimiter - delimiter used to separate the record starting with
     *                       the given prefix from the rest of the data
     * @param clsParser - parser use to parse the record to a a set of attributes
+    * @throws OSSException - an error has occurred
     */
    protected void forPrefixAndDelimiter(
       String strPrefix,
       String strDelimiter,
       // TODO: Improve: This should be limited to classes which implements Parser interface
       Class  clsParser
-   )
+   ) throws OSSException
    {
-      ThreeElementStruct<String, String, Class> pattern;
+      ThreeElementStruct<String, String, Parser> pattern;
+      ClassFactory<Parser>                       factory;
+      Parser                                     parser;
       
-      pattern = new ThreeElementStruct<>(strPrefix, strDelimiter, clsParser);
+      factory = new ClassFactory<>(clsParser);
+      parser = factory.createInstance();
+      pattern = new ThreeElementStruct<>(strPrefix, strDelimiter, parser);
       
       m_mpPatters.put(strPrefix, pattern);
    }
@@ -93,6 +144,9 @@ public abstract class TxtMapperImpl<C extends DigesterContext, R extends Record>
    /**
     * Configure the patterns that the mapper should use when mapping the data 
     * from plain text to POJO representation.
+    * 
+    * @throws OSSException - an error has occurred
     */
-   protected abstract void configure();
+   protected abstract void configure(
+   ) throws OSSException;
 }
