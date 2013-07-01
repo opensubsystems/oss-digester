@@ -29,17 +29,20 @@ import org.opensubsystems.digester.data.DigesterContext;
  * 
  * @author bastafidli
  */
-public interface Parser<C extends DigesterContext, R extends Record> 
+public interface Parser<C extends DigesterContext, R extends Record, O> 
 {
    /**
     * Parse the record into map of attributes and values.
     * 
     * @param context - context within which the record is processed
     * @param record - record to parse
-    * @return Map<String, Object> - record parsed into attributes and values
+    * @return Map<String, O> - record parsed into attributes and values. The key
+    *                          is the attribute name or some other identifier
+    *                          and the value is the actual attribute value parsed
+    *                          from the record
     * @throws OSSException - an error has occurred
     */
-   Map<String, Object> parse(
+   Map<String, O> parse(
       C context,
       R record
    ) throws OSSException;
