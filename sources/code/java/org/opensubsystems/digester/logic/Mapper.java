@@ -22,29 +22,38 @@ package org.opensubsystems.digester.logic;
 import org.opensubsystems.digester.data.Record;
 import org.opensubsystems.digester.data.DigesterContext;
 import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.util.TwoElementStruct;
 
 /**
  * Mapper responsible for transforming content supplied by reader to data objects.  
  * 
  * @author bastafidli
  */
-public interface Mapper<C extends DigesterContext, R extends Record> 
+public interface Mapper<C extends DigesterContext, R extends Record, O> 
 {
-  /**
-   * Create the data object from the record read by the reader.
-   * 
-   * @param context - context within which the record is processed
-   * @param record - record for which the data object is being created
-   * @return Object - data object created from the supplied record or null if no 
-   *                  data object should be created for this record and this record 
-   *                  should be skipped. Record can be skipped for example when 
-   *                  it is cached in the context and will be processed later.
-   * @throws OSSException - an error has occurred
-   */
-  Object createObject(
-    C context,
-    R record
-  ) throws OSSException;
+   /**
+    * Create the data object from the record read by the reader.
+    * 
+    * @param context - context within which the record is processed
+    * @param record - record for which the data object is being created
+    * @return TwoElementStruct<O, Record> - The first element is the data object 
+    *                                       created from the supplied record or 
+    *                                       null if no data object should be 
+    *                                       created for this record and this record 
+    *                                       should be skipped. Record can be 
+    *                                       skipped for example when it is cached 
+    *                                       in the context and will be processed 
+    *                                       later. The second element is the 
+    *                                       remainder of the record if any after 
+    *                                       the object was created. If no object 
+    *                                       was created, then the entire record
+    *                                       is returned in this field.
+    * @throws OSSException - an error has occurred
+    */
+   TwoElementStruct<O, Record> create(
+      C context,
+      R record
+   ) throws OSSException;
 
 //  /**
 //   * Process record, which was requested to be skipped. Since the skipped record
