@@ -94,6 +94,17 @@ public interface Record<T>
    ) throws OSSDataNotFoundException;
    
    /**
+    * Test if the record stars with the specified value.
+    * 
+    * @param strValue - value to search for in the record
+    * @boolean - true if the record starts with the specified value, false 
+    *            otherwise
+    */
+   boolean startsWith(
+      String strValue
+   );
+
+   /**
     * Test if the record contains specified value.
     * 
     * @param strValue - value to search for in the record
