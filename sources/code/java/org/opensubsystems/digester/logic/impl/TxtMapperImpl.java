@@ -108,6 +108,8 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
          }
       }
       
+      // TODO: We still need to map the parsed data to a hava object
+      
       return new TwoElementStruct<O, Record>(result, leftover);
    }
    
