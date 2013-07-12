@@ -77,8 +77,8 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
     */
    @Override
    public TwoElementStruct<O, Record> create(
-      C context,
-      R record
+      final C context,
+      final R record
    ) throws OSSException
    {
       O                                          result = null;
@@ -89,6 +89,7 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
       String                                     strDelimiter;
       Parser                                     parser;
       TwoElementStruct<R, R>                     split;
+      Map<String, Object>                        values;
       
       for (Map.Entry<String, ThreeElementStruct<String, String, Parser>> entry 
            : m_mpPatters.entrySet())
@@ -103,12 +104,11 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
             split = record.split(strDelimiter, Record.Presence.REQUIRED);
             element = split.getFirst();
             leftover = split.getSecond();
-            result = (O)parser.parse(context, element);
+            values = parser.parse(context, element);
+            result = (O)parser.create(context, values);
             break;
          }
       }
-      
-      // TODO: We still need to map the parsed data to a hava object
       
       return new TwoElementStruct<O, Record>(result, leftover);
    }
@@ -126,10 +126,10 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
     * @throws OSSException - an error has occurred
     */
    protected void forPrefixAndDelimiter(
-      String strPrefix,
-      String strDelimiter,
+      final String strPrefix,
+      final String strDelimiter,
       // TODO: Improve: This should be limited to classes which implements Parser interface
-      Class  clsParser
+      final Class  clsParser
    ) throws OSSException
    {
       ThreeElementStruct<String, String, Parser> pattern;
