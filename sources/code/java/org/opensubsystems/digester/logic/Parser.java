@@ -25,7 +25,8 @@ import org.opensubsystems.digester.data.Record;
 import org.opensubsystems.digester.data.DigesterContext;
 
 /**
- * Parser capable of parsing unstructured data to structured data.
+ * Parser capable of parsing unstructured data to structured data and then 
+ * creating Java objects from the parse data.
  * 
  * @author bastafidli
  */
@@ -36,14 +37,27 @@ public interface Parser<C extends DigesterContext, R extends Record, O>
     * 
     * @param context - context within which the record is processed
     * @param record - record to parse
-    * @return Map<String, O> - record parsed into attributes and values. The key
-    *                          is the attribute name or some other identifier
-    *                          and the value is the actual attribute value parsed
-    *                          from the record
+    * @return Map<String, Object> - record parsed into attributes and values. The 
+    *                               key is the attribute name or some other 
+    *                               identifier and the value is the actual 
+    *                               attribute value parsed from the record
     * @throws OSSException - an error has occurred
     */
-   Map<String, O> parse(
+   Map<String, Object> parse(
       C context,
       R record
+   ) throws OSSException;
+   
+   /**
+    * Create the object based on the previously parsed values.
+    * 
+    * @param context - context within which the record is processed
+    * @param values - values produced by the parse operation
+    * @return O - object created from the parsed values
+    * @throws OSSException - an error has occurred
+    */
+   O create(
+      C                   context,
+      Map<String, Object> values
    ) throws OSSException;
 }
