@@ -43,7 +43,7 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
                                     R extends Record,
                                     O> 
                                    extends StatelessControllerImpl
-                                   implements Mapper<C, R, O>
+                                   implements Mapper<C, R, O, Map<String, Object>>
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -76,7 +76,7 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
     * {@inheritDoc}
     */
    @Override
-   public TwoElementStruct<O, Record> create(
+   public ThreeElementStruct<O, Map<String, Object>, Record> create(
       final C context,
       final R record
    ) throws OSSException
@@ -89,7 +89,7 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
       String                                     strDelimiter;
       Parser                                     parser;
       TwoElementStruct<R, R>                     split;
-      Map<String, Object>                        values;
+      Map<String, Object>                        values = null;
       
       for (Map.Entry<String, ThreeElementStruct<String, String, Parser>> entry 
            : m_mpPatters.entrySet())
@@ -113,7 +113,9 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
          }
       }
       
-      return new TwoElementStruct<O, Record>(result, leftover);
+      return new ThreeElementStruct<O, Map<String, Object>, Record>(result, 
+                                                                    values, 
+                                                                    leftover);
    }
    
    // Helper methods ///////////////////////////////////////////////////////////
