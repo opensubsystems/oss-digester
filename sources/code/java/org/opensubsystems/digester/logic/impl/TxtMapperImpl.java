@@ -105,7 +105,10 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
             element = split.getFirst();
             leftover = split.getSecond();
             values = parser.parse(context, element);
-            result = (O)parser.create(context, values);
+            if (values != null)
+            {
+               result = (O)parser.create(context, values);
+            }
             break;
          }
       }
