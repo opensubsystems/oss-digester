@@ -44,10 +44,13 @@ public interface Mapper<C extends DigesterContext, R extends Record, O>
     *                                       skipped for example when it is cached 
     *                                       in the context and will be processed 
     *                                       later. The second element is the 
-    *                                       remainder of the record if any after 
+    *                                       remainder of the record if any, after 
     *                                       the object was created. If no object 
-    *                                       was created, then the entire record
-    *                                       is returned in this field.
+    *                                       can be created, then the entire record
+    *                                       is returned in this field unless the
+    *                                       record is skipped on purpose in which
+    *                                       case only the remainder of the record
+    *                                       is returned.
     * @throws OSSException - an error has occurred
     */
    TwoElementStruct<O, Record> create(
