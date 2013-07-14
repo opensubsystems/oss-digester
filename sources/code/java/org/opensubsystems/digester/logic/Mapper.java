@@ -22,38 +22,46 @@ package org.opensubsystems.digester.logic;
 import org.opensubsystems.digester.data.Record;
 import org.opensubsystems.digester.data.DigesterContext;
 import org.opensubsystems.core.error.OSSException;
-import org.opensubsystems.core.util.TwoElementStruct;
+import org.opensubsystems.core.util.ThreeElementStruct;
 
 /**
  * Mapper responsible for transforming content supplied by reader to data objects.  
  * 
  * @author bastafidli
  */
-public interface Mapper<C extends DigesterContext, R extends Record, O> 
+public interface Mapper<C extends DigesterContext, R extends Record, O, V> 
 {
    /**
     * Create the data object from the record read by the reader.
     * 
     * @param context - context within which the record is processed
     * @param record - record for which the data object is being created
-    * @return TwoElementStruct<O, Record> - The first element is the data object 
-    *                                       created from the supplied record or 
-    *                                       null if no data object should be 
-    *                                       created for this record and this record 
-    *                                       should be skipped. Record can be 
-    *                                       skipped for example when it is cached 
-    *                                       in the context and will be processed 
-    *                                       later. The second element is the 
-    *                                       remainder of the record if any, after 
-    *                                       the object was created. If no object 
-    *                                       can be created, then the entire record
-    *                                       is returned in this field unless the
-    *                                       record is skipped on purpose in which
-    *                                       case only the remainder of the record
-    *                                       is returned.
+    * @return TwoElementStruct<O, V, Record> - The first element is the data object 
+    *                                          created from the supplied record 
+    *                                          or null if no data object should 
+    *                                          be created for this record and this 
+    *                                          record should be skipped. Record 
+    *                                          can be skipped for example when it 
+    *                                          is cached in the context and will 
+    *                                          be processed later. 
+    *                                          The second element contains the 
+    *                                          values that were used to create the 
+    *                                          first element if any so that they 
+    *                                          can be used during second pass if 
+    *                                          this element depends on any other 
+    *                                          previously or  subsequently created 
+    *                                          objects. 
+    *                                          The third element contains the 
+    *                                          remainder of the record if any, 
+    *                                          after the object was created. If 
+    *                                          no object can be created, then the 
+    *                                          entire record is returned in this 
+    *                                          field unless the record is skipped 
+    *                                          on purpose in which case only the 
+    *                                          remainder of the record is returned.
     * @throws OSSException - an error has occurred
     */
-   TwoElementStruct<O, Record> create(
+   ThreeElementStruct<O, V, Record> create(
       C context,
       R record
    ) throws OSSException;
