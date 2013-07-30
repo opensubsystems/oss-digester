@@ -19,7 +19,7 @@
 
 package org.opensubsystems.digester.data;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import org.opensubsystems.core.error.OSSDataNotFoundException;
 import org.opensubsystems.core.error.OSSException;
@@ -68,13 +68,13 @@ public interface Record<T>
     * separator.
     * 
     * @param strSeparator - separator separating the values
-    * @param lstParsed - list of values where to parse the specified portion of 
-    *                    the record
+    * @param colParsed - collection of values where to parse the specified 
+    *                    portion of the record
     * @throws OSSException - an error has occurred
     */
-   void getDataAsList(
-     String       strSeparator,
-     List<String> lstParsed
+   void getDataAsCollection(
+     String             strSeparator,
+     Collection<String> colParsed
    ) throws OSSException;
 
    /**

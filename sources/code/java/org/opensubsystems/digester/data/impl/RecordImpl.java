@@ -19,7 +19,7 @@
 
 package org.opensubsystems.digester.data.impl;
 
-import java.util.List;
+import java.util.Collection;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.TwoElementStruct;
@@ -37,9 +37,9 @@ public abstract class RecordImpl<T> implements Record<T>
     * {@inheritDoc}
     */
    @Override
-   public void getDataAsList(
-     String       strSeparator,
-     List<String> lstParsed
+   public void getDataAsCollection(
+     String             strSeparator,
+     Collection<String> colParsed
    ) throws OSSException
    {
       TwoElementStruct<Record, Record> split;
@@ -64,7 +64,7 @@ public abstract class RecordImpl<T> implements Record<T>
                        : "split didn't created not null second result";
             }
 
-            lstParsed.add(value.getDataAsString());
+            colParsed.add(value.getDataAsString());
          }
       }
       while (value != null);
