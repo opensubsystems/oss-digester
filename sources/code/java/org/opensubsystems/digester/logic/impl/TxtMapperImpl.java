@@ -21,6 +21,7 @@ package org.opensubsystems.digester.logic.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import org.opensubsystems.digester.data.DigesterContext;
 import java.util.logging.Logger;
 import org.opensubsystems.core.error.OSSException;
@@ -52,6 +53,11 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
     * format to POJO objects.
     */
    protected Map<String, ThreeElementStruct<String, String, Parser>> m_mpPatters;
+   
+   /**
+    * Flag indicating if the mapper was already configured.
+    */
+   private boolean m_bConfigured = false;
    
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -90,6 +96,14 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
       Parser                                     parser;
       TwoElementStruct<R, R>                     split;
       Map<String, Object>                        values = null;
+      
+      if (m_bConfigured)
+      {
+         s_logger.finest("Starting to configure mapper");
+         configure();
+         m_bConfigured = true;
+         s_logger.finest("Finished configuring mapper");
+      }
       
       for (Map.Entry<String, ThreeElementStruct<String, String, Parser>> entry 
            : m_mpPatters.entrySet())
@@ -145,6 +159,8 @@ public abstract class TxtMapperImpl<C extends DigesterContext,
       parser = factory.createInstance();
       pattern = new ThreeElementStruct<>(strPrefix, strDelimiter, parser);
       
+      s_logger.log(Level.FINEST, "Adding parser {0} for prefix {1} and delimiter {2}", 
+                   new Object[]{clsParser.getName(), strPrefix, strDelimiter});
       m_mpPatters.put(strPrefix, pattern);
    }
    
