@@ -48,6 +48,7 @@ public class DigesterContextImpl extends ParametrizedContextImpl
    /**
     * Full constructor.
     * 
+    * @param reader - reader to user to read the data
     */
    public DigesterContextImpl(
       Reader reader
@@ -66,14 +67,14 @@ public class DigesterContextImpl extends ParametrizedContextImpl
    @Override
    public void toString(
       StringBuilder sb,
-      int           ind
+      int           iIndentLevel
    )
    {
-      append(sb, ind + 0, "DigesterContextImpl[");
-      append(sb, ind + 1, "m_reader = ", m_reader);
-      append(sb, ind + 1, "m_openedSource = ", m_openedSource);
-      super.toString(sb, ind + 1);
-      append(sb, ind + 0, "]");
+      append(sb, iIndentLevel + 0, "DigesterContextImpl[");
+      append(sb, iIndentLevel + 1, "m_reader = ", m_reader);
+      append(sb, iIndentLevel + 1, "m_openedSource = ", m_openedSource);
+      super.toString(sb, iIndentLevel + 1);
+      append(sb, iIndentLevel + 0, "]");
    }
 
    /**
