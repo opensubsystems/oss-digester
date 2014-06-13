@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,6 +19,7 @@
 
 package org.opensubsystems.digester.logic;
 
+import java.io.Reader;
 import org.opensubsystems.digester.data.DigesterContext;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.logic.StatelessController;
@@ -29,19 +30,23 @@ import org.opensubsystems.digester.data.Record;
  * form of records.
  *
  * @author bastafidli
+ * @param <R> - type of Record that the reader will be reading
  */
-public interface Reader<S, C extends DigesterContext, R extends Record> extends StatelessController
+public interface OSSReader<R extends Record> extends StatelessController
 {
    /**
     * Open the source for reading.
     * 
     * @param context - context within which the content will be read
     * @param source - source from this the reader should read data
+    * @param strSourceName - user friendly name of the source from which the data
+    *                        are read
     * @throws OSSException - an error has occurred 
     */
    void open(
-      C context,
-      S source
+      DigesterContext context,
+      Reader          source,
+      String          strSourceName
    ) throws OSSException;
    
    /**
@@ -53,7 +58,7 @@ public interface Reader<S, C extends DigesterContext, R extends Record> extends 
     * @throws OSSException - an error has occurred 
     */
    R read(
-      C context
+      DigesterContext context
    ) throws OSSException;
 
    /**
@@ -62,8 +67,9 @@ public interface Reader<S, C extends DigesterContext, R extends Record> extends 
     * succeeded.
     * 
     * @param context - context initialized during open
+    * @throws OSSException - an error has occurred
     */
    void close(
-      C context
+      DigesterContext context
    ) throws OSSException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2013 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,8 +19,9 @@
 
 package org.opensubsystems.digester.data.impl;
 
+import java.io.Reader;
 import org.opensubsystems.digester.data.DigesterContext;
-import org.opensubsystems.digester.logic.Reader;
+import org.opensubsystems.digester.logic.OSSReader;
 import org.opensubsystems.pattern.parameter.data.impl.ParametrizedContextImpl;
 
 /**
@@ -36,12 +37,18 @@ public class DigesterContextImpl extends ParametrizedContextImpl
    /**
     * The reader using this context.
     */
-   protected Reader m_reader;
+   protected OSSReader m_reader;
    
    /**
     * Object that represents source opened by reader and ready for reading.
     */
-   protected Object m_openedSource;
+   protected Reader m_openedSource;
+   
+   /**
+    * User friendly name that identifies the source from where the data will be
+    * read.
+    */
+   protected String m_strOpenedSourceName;
    
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -51,7 +58,7 @@ public class DigesterContextImpl extends ParametrizedContextImpl
     * @param reader - reader to user to read the data
     */
    public DigesterContextImpl(
-      Reader reader
+      OSSReader reader
    )
    {
       super();
@@ -73,6 +80,7 @@ public class DigesterContextImpl extends ParametrizedContextImpl
       append(sb, iIndentLevel + 0, "DigesterContextImpl[");
       append(sb, iIndentLevel + 1, "m_reader = ", m_reader);
       append(sb, iIndentLevel + 1, "m_openedSource = ", m_openedSource);
+      append(sb, iIndentLevel + 1, "m_strOpenedSourceName = ", m_strOpenedSourceName);
       super.toString(sb, iIndentLevel + 1);
       append(sb, iIndentLevel + 0, "]");
    }
@@ -81,7 +89,7 @@ public class DigesterContextImpl extends ParametrizedContextImpl
     * {@inheritDoc}
     */
    @Override
-   public Reader getReader()
+   public OSSReader getReader()
    {
       return m_reader;
    }
@@ -102,7 +110,7 @@ public class DigesterContextImpl extends ParametrizedContextImpl
     * {@inheritDoc}
     */
    @Override
-   public Object getOpenedSource(
+   public Reader getOpenedSource(
    )
    {
       return m_openedSource;
@@ -112,10 +120,28 @@ public class DigesterContextImpl extends ParametrizedContextImpl
     * {@inheritDoc}
     */
    @Override
+   public String getOpenedSourceName()
+   {
+      return m_strOpenedSourceName;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void setOpenedSource(
-      Object openedSource
+      Reader openedSource,
+      String strSourceName
    )
    {
       m_openedSource = openedSource;
+      if (m_openedSource != null)
+      {
+         m_strOpenedSourceName = strSourceName;
+      }
+      else
+      {
+         m_strOpenedSourceName = "";
+      }
    }
 }

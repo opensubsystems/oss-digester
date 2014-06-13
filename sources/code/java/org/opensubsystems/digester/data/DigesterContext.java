@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,7 +19,8 @@
 
 package org.opensubsystems.digester.data;
 
-import org.opensubsystems.digester.logic.Reader;
+import java.io.Reader;
+import org.opensubsystems.digester.logic.OSSReader;
 import org.opensubsystems.pattern.parameter.data.ParametrizedContext;
 
 /**
@@ -35,36 +36,53 @@ public interface DigesterContext extends ParametrizedContext
     * 
     * @return StateMachine
     */
-   Reader getReader();
+   OSSReader getReader();
    
    /**
-    * Test if this context is closed for reading.
+    * Test if this source has more data to be read.
     * 
     * @return boolean - if true then the reader is unable to read any more data
     *                   in this context, false otherwise
+    */
+   // This method cannot be effectively implemented because not every reader has
+   // a way to check  if there is more data and if does it by reading the data
+   // it may not be able to repeat the read
+   // boolean hasMoreData();
+
+   /**
+    * Test if this context is closed for reading.
+    * 
+    * @return boolean - if true then the reader has been closed and is unable to 
+    *                   read any more data in this context, false otherwise
     */
    boolean isClosed();
 
    /**
     * Get source that has been opened and ready to be used by reader.
     * 
-    * @return Object - source opened and ready to be used by reader. If null
-    *                  then any previously configured opened source will be 
-    *                  forgotten and the context will be considered closed. The
-    *                  return value is null since it is not known what type of
-    *                  object is reader implementation using to represent an 
-    *                  opened source.
+    * @return Reader - source opened and ready to be used by reader. 
     */
-   Object getOpenedSource();
+   Reader getOpenedSource();
 
+   /**
+    * Get user friendly name that identifies the source from where the data will 
+    * be read
+    * 
+    * @return Reader - source opened and ready to be used by reader. 
+    */
+   String getOpenedSourceName();
+   
    /**
     * Set source that has been opened and ready to be used by reader.
     * 
     * @param openedSource - source opened and ready to be used by reader. If null
     *                       then any previously configured opened source will be 
     *                       forgotten and the context will be considered closed.
+    * @param strSourceName - user friendly name that identifies the source from 
+    *                        where the data will be read.
     */
    void setOpenedSource(
-      Object openedSource
+      Reader openedSource,
+      String strSourceName
    );
 }

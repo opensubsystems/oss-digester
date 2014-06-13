@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,10 +19,10 @@
 
 package org.opensubsystems.digester.logic.impl;
 
-import org.opensubsystems.digester.logic.Reader;
+import org.opensubsystems.digester.logic.OSSReader;
 import org.opensubsystems.digester.data.DigesterContext;
-import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.digester3.Digester;
@@ -41,8 +41,8 @@ import org.xml.sax.SAXException;
  *
  * @author bastafidli
  */
-public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> extends StatelessControllerImpl
-                                                                            implements Reader<File, C, R>
+public class XmlReaderImpl<R extends Record> extends StatelessControllerImpl
+                                             implements OSSReader<R>
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -56,14 +56,14 @@ public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> exte
    /**
     * Logger for this class
     */
-   private static Logger s_logger = Log.getInstance(XmlFileReaderImpl.class);
+   private static Logger s_logger = Log.getInstance(XmlReaderImpl.class);
 
    // Constructors /////////////////////////////////////////////////////////////
    
    /**
     * Default constructor. The rules modules has to be initialized using context.
     */
-   public XmlFileReaderImpl()
+   public XmlReaderImpl()
    {
       // Do nothing
       // TODO: The rules module has to be supplied via the context
@@ -75,7 +75,7 @@ public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> exte
     * @param rules - Rules describing how to digest the XML input into Java 
     *                objects.
     */
-   public XmlFileReaderImpl(
+   public XmlReaderImpl(
       RulesModule rules
    )
    {
@@ -89,18 +89,19 @@ public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> exte
     */
    @Override
    public void open(
-      C    context,
-      File source
+      DigesterContext context,
+      Reader          source,
+      String          strSourceName
    ) throws OSSException
    {
       if (GlobalConstants.ERROR_CHECKING)
       {
          assert m_rules != null : 
-                "No rules modules configured to digest file " 
-                + source.getAbsolutePath(); 
+                "No rules modules configured to digest data from " 
+                + strSourceName; 
       }
-      context.setOpenedSource(source);
-      s_logger.log(Level.FINE, "Opened file {0}", source.getAbsolutePath());
+      context.setOpenedSource(source, strSourceName);
+      s_logger.log(Level.FINE, "Opened reader to read from {0}", strSourceName);
    }
    
    /**
@@ -108,36 +109,33 @@ public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> exte
     */
    @Override
    public R read(
-      C context
+      DigesterContext context
    ) throws OSSException
    {
       R        record = null;
       Digester digester;
-      Object   source;
+      Reader   source;
+      String   strSourceName;
 
       source = context.getOpenedSource();
+      strSourceName = context.getOpenedSourceName();
       if (GlobalConstants.ERROR_CHECKING)
       {
          assert source != null : 
                 "No opened source is available to read from."; 
-         assert source instanceof File : 
-                "The opened source is not a " + File.class 
-                + ", it is instead a " + source.getClass(); 
       }
 
-      File file = (File)source;
-         
       try
       {
          digester = DigesterLoader.newLoader(m_rules).newDigester();
-         s_logger.log(Level.FINE, "Parsing file {0}", file.getCanonicalPath());
-         record = digester.parse(file);
-         s_logger.log(Level.FINE, "Finished parsing file {0}", file.getCanonicalPath());
+         s_logger.log(Level.FINE, "Reading data from {0}", strSourceName);
+         record = digester.parse(source);
+         s_logger.log(Level.FINE, "Finished reading data from {0}", strSourceName);
       }
       catch (SAXException | IOException exc)
       {
-         throw new OSSMultiException("Error parsing input file " 
-                                     + file.getAbsolutePath(), exc);
+         throw new OSSMultiException("Error reading data from " 
+                                     + strSourceName, exc);
       }
       
       return record;
@@ -148,9 +146,13 @@ public class XmlFileReaderImpl<C extends DigesterContext, R extends Record> exte
     */
    @Override
    public void close(
-      C context
+      DigesterContext context
    ) throws OSSException
    {
-      context.setOpenedSource(null);
+      String strSourceName;
+      
+      strSourceName = context.getOpenedSourceName();
+      context.setOpenedSource(null, "");
+      s_logger.log(Level.FINE, "Closed reader to read from {0}", strSourceName);
    }
 }
